@@ -83,7 +83,7 @@ def delete(bot, update):
     except IndexError:
         return
     db.delete_trigger_text(triggers, texts, update.message.chat_id)
-    update.message.reply_text('( Φ ω Φ )')
+    #update.message.reply_text('( Φ ω Φ )')
     update_trigger_list(update.message.chat_id)
 
 
@@ -137,8 +137,12 @@ def process_trigger(bot, update):
         return
     if TRIGGERS.get(update.message.chat_id):
 
+        print "Debug 1"
+
         if random.randint(1, 10) > 3:
             return
+
+        print "Debug 2"
 
         matched_triggers = []
 
@@ -146,7 +150,11 @@ def process_trigger(bot, update):
             if trigger in update.message.text.lower():
                 matched_triggers.append(trigger)
 
+        print "Debug 3"
+
         time.sleep(random.randint(2, 5))
+
+        print "Debug 4"
 
         if matched_triggers:
             update.message.reply_text(
