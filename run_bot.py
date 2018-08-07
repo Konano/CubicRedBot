@@ -5,6 +5,7 @@ import logging
 import datetime
 import json
 import sys
+import time
 
 TRIGGERS = {}
 BAN_IDS = []
@@ -54,25 +55,23 @@ def add(bot, update):
         triggers = content[0].lower().split('|')
         texts = content[1].split('|')
     except IndexError:
-        update.message.reply_text('没东西 add 个大头鬼啦')
+        update.message.reply_text('ʕ •ɷ• ??')
         return
     for text in texts:
         if not len(text) <= 140:
-            update.message.reply_text('2<=len(trigger)<=140, len(text)<=140')
+            update.message.reply_text('ʕ •ɷ• ??')
             return
     for trigger in triggers:
         if not 2 <= len(trigger) <= 140:
-            update.message.reply_text('2<=len(trigger)<=140, len(text)<=140')
+            update.message.reply_text('ʕ •ɷ• ??')
             return
 
     result = db.add_trigger_text(triggers, texts, update.message.chat_id)
     if result != db.SUCCESS:
-        lines = []
-        for item in result:
-            lines.append('- %s@%s already exists' % item)
-        update.message.reply_text('Result:\n' + '\n'.join(lines))
+        update.message.reply_text('ʕ •ɷ• ??')
+        return
 
-    update.message.reply_text('done!')
+    update.message.reply_text('( Φ ω Φ )')
     update_trigger_list(update.message.chat_id)
 
 
@@ -84,7 +83,7 @@ def delete(bot, update):
     except IndexError:
         return
     db.delete_trigger_text(triggers, texts, update.message.chat_id)
-    update.message.reply_text('deleted!')
+    update.message.reply_text('( Φ ω Φ )')
     update_trigger_list(update.message.chat_id)
 
 
@@ -100,7 +99,7 @@ def list_text(bot, update):
     if result:
         update.message.reply_text('\n'.join(result))
     else:
-        update.message.reply_text('Empty list!')
+        update.message.reply_text('ʕ •ɷ• ??')
 
 
 def merge(bot, update):
@@ -137,11 +136,18 @@ def process_trigger(bot, update):
     if update.message.from_user.id in BAN_IDS:
         return
     if TRIGGERS.get(update.message.chat_id):
+
+        if random.randint(1, 10) > 3:
+            return
+
         matched_triggers = []
 
         for trigger in TRIGGERS.get(update.message.chat_id):
             if trigger in update.message.text.lower():
                 matched_triggers.append(trigger)
+
+        time.sleep(random.randint(2, 5))
+
         if matched_triggers:
             update.message.reply_text(
                 db.query_random_trigger_text(random.choice(matched_triggers), update.message.chat_id))
@@ -163,9 +169,9 @@ def process_chat_message(bot, update):
                            user_id=update.message.from_user.id, time=update.message.date)
 
         if update.message.new_chat_members:  # entering group trigger
-            update.message.reply_text('新人请发红包,支付宝QQ微信都可以')
+            update.message.reply_text('(ฅ>ω<*ฅ) ')
         if update.message.left_chat_member:  # left group trigger
-            update.message.reply_text('@%s 跑了!' % update.message.left_chat_member.username)
+            update.message.reply_text('ค(TㅅT)')
 
 
 def show_all_triggers(bot, update):
