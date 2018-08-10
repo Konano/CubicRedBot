@@ -132,13 +132,14 @@ def clear(bot, update):
 
 
 def process_trigger(bot, update):
+
+    print(update.message.chat_id) # debug
+
     if update.message.date < INIT_TIMESTAMP:
         return
     if update.message.from_user.id in BAN_IDS:
         return
     if TRIGGERS.get(update.message.chat_id):
-
-        print(update.message.chat_id) # debug
 
         if random.randint(1, 10) > 3:
             return
