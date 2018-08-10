@@ -9,6 +9,7 @@ import time
 
 TRIGGERS = {}
 BAN_IDS = []
+MAKER_ID = 0
 INIT_TIMESTAMP = datetime.datetime.now()
 
 '''
@@ -55,23 +56,23 @@ def add(bot, update):
         triggers = content[0].lower().split('|')
         texts = content[1].split('|')
     except IndexError:
-        update.message.reply_text('ʕ •ɷ• ??')
+        update.message.reply_text('哈？')
         return
     for text in texts:
         if not len(text) <= 140:
-            update.message.reply_text('ʕ •ɷ• ??')
+            update.message.reply_text('哈？')
             return
     for trigger in triggers:
         if not 2 <= len(trigger) <= 140:
-            update.message.reply_text('ʕ •ɷ• ??')
+            update.message.reply_text('哈？')
             return
 
     result = db.add_trigger_text(triggers, texts, update.message.chat_id)
     if result != db.SUCCESS:
-        update.message.reply_text('ʕ •ɷ• ??')
+        update.message.reply_text('哈？')
         return
 
-    # update.message.reply_text('( Φ ω Φ )')
+    update.message.reply_text('Add!')
     update_trigger_list(update.message.chat_id)
 
 
@@ -81,11 +82,11 @@ def delete(bot, update):
         triggers = content[0].lower().split('|')
         texts = content[1].split('|')
     except IndexError:
+    	update.message.reply_text('哈？')
         return
     db.delete_trigger_text(triggers, texts, update.message.chat_id)
-    update.message.reply_text('( Φ ω Φ )')
+    update.message.reply_text('Delete!')
     update_trigger_list(update.message.chat_id)
-
 
 def list_text(bot, update):
     if update.message.date < INIT_TIMESTAMP:
@@ -99,7 +100,7 @@ def list_text(bot, update):
     if result:
         update.message.reply_text('\n'.join(result))
     else:
-        update.message.reply_text('ʕ •ɷ• ??')
+        update.message.reply_text('Empty list!')
 
 
 def merge(bot, update):
@@ -137,6 +138,8 @@ def process_trigger(bot, update):
         return
     if TRIGGERS.get(update.message.chat_id):
 
+    	print(update.message.chat_id) # debug
+
         if random.randint(1, 10) > 3:
             return
 
@@ -146,7 +149,7 @@ def process_trigger(bot, update):
             if trigger in update.message.text.lower():
                 matched_triggers.append(trigger)
 
-        time.sleep(random.randint(2, 5))
+        time.sleep(random.randint(3, 7))
 
         if matched_triggers:
             update.message.reply_text(
@@ -169,7 +172,7 @@ def process_chat_message(bot, update):
                            user_id=update.message.from_user.id, time=update.message.date)
 
         if update.message.new_chat_members:  # entering group trigger
-            update.message.reply_text('(ฅ>ω<*ฅ) ')
+            update.message.reply_text('蹭蹭 (ค>ω<ค)')
         if update.message.left_chat_member:  # left group trigger
             update.message.reply_text('ค(TㅅT)')
 
@@ -286,6 +289,8 @@ def main():
 
     global BAN_IDS
     BAN_IDS = config['ban_id']
+	global MAKER_ID
+    MAKER_ID = config['maker_id']
     db.__init__(config['db_path'])
     if len(sys.argv) >= 2:
         if sys.argv[1] == '--setup':

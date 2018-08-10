@@ -1,4 +1,4 @@
 config.json
-miaowu.db
+*.db
 nohup.out
 __pycache__

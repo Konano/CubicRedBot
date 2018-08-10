@@ -1,7 +1,9 @@
 {
-  "db_path": "./miaowu.db",
+  "db_path": "./erha.db",
   "bot_token": "",
   "debug_level": 30,
+  "maker_id": null,
+  "chat_id": null,
   "ban_id": [
     44785003
   ]
