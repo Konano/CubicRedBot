@@ -10,6 +10,7 @@ import time
 TRIGGERS = {}
 BAN_IDS = []
 MAKER_ID = 0
+CHAT_ID = 0
 INIT_TIMESTAMP = datetime.datetime.now()
 
 '''
@@ -68,6 +69,9 @@ def add(bot, update):
             return
 
     result = db.add_trigger_text(triggers, texts, update.message.chat_id)
+    if update.message.chat_id == MAKER_ID:
+        result = db.add_trigger_text(triggers, texts, CHAT_ID)
+        print("CHAT ADD SUCCESS")
     if result != db.SUCCESS:
         update.message.reply_text('哈？')
         return
@@ -85,6 +89,9 @@ def delete(bot, update):
         update.message.reply_text('哈？')
         return
     db.delete_trigger_text(triggers, texts, update.message.chat_id)
+    if update.message.chat_id == MAKER_ID:
+        db.delete_trigger_text(triggers, texts, CHAT_ID)
+        print("CHAT DEL SUCCESS")
     update.message.reply_text('Delete!')
     update_trigger_list(update.message.chat_id)
 
@@ -132,8 +139,6 @@ def clear(bot, update):
 
 
 def process_trigger(bot, update):
-
-    print(update.message.chat_id) # debug
 
     if update.message.date < INIT_TIMESTAMP:
         return
@@ -288,10 +293,10 @@ def main():
         print('Bad config!!!')
         exit(1)
 
-    global BAN_IDS
+    global BAN_IDS, MAKER_ID, CHAT_ID
     BAN_IDS = config['ban_id']
-    global MAKER_ID
     MAKER_ID = config['maker_id']
+    CHAT_ID = config['chat_id']
     db.__init__(config['db_path'])
     if len(sys.argv) >= 2:
         if sys.argv[1] == '--setup':
