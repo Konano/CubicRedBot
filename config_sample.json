@@ -4,7 +4,5 @@
   "debug_level": 30,
   "maker_id": null,
   "chat_id": null,
-  "ban_id": [
-    44785003
-  ]
+  "ban_id": []
 }

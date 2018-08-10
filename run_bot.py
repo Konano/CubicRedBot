@@ -82,7 +82,7 @@ def delete(bot, update):
         triggers = content[0].lower().split('|')
         texts = content[1].split('|')
     except IndexError:
-    	update.message.reply_text('哈？')
+        update.message.reply_text('哈？')
         return
     db.delete_trigger_text(triggers, texts, update.message.chat_id)
     update.message.reply_text('Delete!')
