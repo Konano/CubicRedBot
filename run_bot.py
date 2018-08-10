@@ -138,7 +138,7 @@ def process_trigger(bot, update):
         return
     if TRIGGERS.get(update.message.chat_id):
 
-    	print(update.message.chat_id) # debug
+        print(update.message.chat_id) # debug
 
         if random.randint(1, 10) > 3:
             return
@@ -289,7 +289,7 @@ def main():
 
     global BAN_IDS
     BAN_IDS = config['ban_id']
-	global MAKER_ID
+    global MAKER_ID
     MAKER_ID = config['maker_id']
     db.__init__(config['db_path'])
     if len(sys.argv) >= 2:
